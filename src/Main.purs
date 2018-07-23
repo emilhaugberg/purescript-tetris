@@ -3,7 +3,9 @@ module Main where
 import Prelude
 import Draw as Draw
 import Config as Config
+import Shapes
 import Data.Maybe (Maybe(..))
+import Data.Int
 import Effect (Effect)
 import Effect.Console (log)
 import Graphics.Canvas
@@ -14,3 +16,4 @@ main = void $ do
   ctx         <- getContext2D canvas
 
   Draw.drawGrid Config.numHorizontalBlocks Config.numVerticalBlocks ctx
+  Draw.drawShape Z ctx
