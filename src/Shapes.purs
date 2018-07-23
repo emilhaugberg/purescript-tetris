@@ -13,32 +13,23 @@ data Shape a     = Shape a a a a
 instance functorShape :: Functor Shape where
   map f (Shape a b c d) = Shape (f a) (f b) (f c) (f d)
 
+shapeToArr :: forall a. Shape a -> Array a
+shapeToArr (Shape a b c d) = [a, b, c, d]
+
 data TetrisShape = Z | T | L | S | MirroredL | Line | Square
 data TetrisColor = Cyan | Blue | Orange | Yellow | Green | Purple | Red
 
-shapeToColor :: TetrisShape -> TetrisColor
-shapeToColor Z         = Cyan
-shapeToColor T         = Blue
-shapeToColor L         = Orange
-shapeToColor S         = Yellow
-shapeToColor MirroredL = Green
-shapeToColor Line      = Purple
-shapeToColor Square    = Red
-
-colorToHex :: TetrisColor -> String
-colorToHex Cyan   = "#00FFFF"
-colorToHex Blue   = "#0000FF"
-colorToHex Orange = "#FFA500"
-colorToHex Yellow = "#FFFF00"
-colorToHex Green  = "#008000"
-colorToHex Purple = "#800080"
-colorToHex Red    = "#FF0000"
-
-shapeToHexColor :: TetrisShape -> String
-shapeToHexColor = colorToHex <<< shapeToColor
-
 initialPos :: TetrisShape -> Shape Coordinate
 initialPos = posToCoord <<< initialPos'
+
+shapeToColor :: TetrisShape -> String
+shapeToColor Z         = "#00FFFF"
+shapeToColor T         = "#0000FF"
+shapeToColor L         = "#FFA500"
+shapeToColor S         = "#FFFF00"
+shapeToColor MirroredL = "#008000"
+shapeToColor Line      = "#800080"
+shapeToColor Square    = "#FF0000"
 
 initialPos' :: TetrisShape -> Shape Number
 initialPos' Z = Shape (-4.0) 0.0 1.0 5.0

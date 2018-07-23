@@ -44,16 +44,12 @@ drawGrid numH numV ctx = do
   drawLines numV Vertical   ctx
 
 drawShape :: forall a. TetrisShape -> Context2D -> Effect Unit
-drawShape s ctx = drawShape' (initialPos s)
+drawShape s ctx = drawRects (initialPos s)
   where
-    drawRect r = do
+    drawRects r = foreachE (shapeToArr $ initialPos s) \i -> do
+      let r = coordinateToRectangle i
+
       rect     ctx r
-      setFillStyle ctx (shapeToHexColor s)
+      setFillStyle ctx (shapeToColor s)
       fillRect ctx r
       stroke   ctx
-
-    drawShape' (Shape a b c d) = do
-      drawRect $ coordinateToRectangle a
-      drawRect $ coordinateToRectangle b
-      drawRect $ coordinateToRectangle c
-      drawRect $ coordinateToRectangle d
