@@ -1,1 +1,1 @@
-require("../output/Main/index").main()
+require("../output/Main/index").main()()

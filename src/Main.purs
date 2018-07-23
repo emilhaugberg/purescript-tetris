@@ -1,9 +1,16 @@
 module Main where
 
 import Prelude
+import Draw as Draw
+import Config as Config
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Console (log)
+import Graphics.Canvas
 
-main :: Effect Unit
-main = do
-  log "Hello sailor!"
+main :: (Partial) => Effect Unit
+main = void $ do
+  Just canvas <- getCanvasElementById "tetris-canvas"
+  ctx         <- getContext2D canvas
+
+  Draw.drawGrid Config.numHorizontalBlocks Config.numVerticalBlocks ctx
