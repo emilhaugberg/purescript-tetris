@@ -16,4 +16,4 @@ main = void $ do
   ctx         <- getContext2D canvas
 
   Draw.drawGrid Config.numHorizontalBlocks Config.numVerticalBlocks ctx
-  Draw.drawShape Z ctx
+  Draw.drawShape L ctx

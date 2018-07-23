@@ -46,9 +46,9 @@ drawGrid numH numV ctx = do
 drawShape :: forall a. TetrisShape -> Context2D -> Effect Unit
 drawShape s ctx = drawShape' (initialPos s)
   where
-    -- rect = coordinateToRectangle $ initialPos s
     drawRect r = do
       rect     ctx r
+      setFillStyle ctx (shapeToHexColor s)
       fillRect ctx r
       stroke   ctx
 

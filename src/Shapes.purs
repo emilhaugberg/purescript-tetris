@@ -16,6 +16,27 @@ instance functorShape :: Functor Shape where
 data TetrisShape = Z | T | L | S | MirroredL | Line | Square
 data TetrisColor = Cyan | Blue | Orange | Yellow | Green | Purple | Red
 
+shapeToColor :: TetrisShape -> TetrisColor
+shapeToColor Z         = Cyan
+shapeToColor T         = Blue
+shapeToColor L         = Orange
+shapeToColor S         = Yellow
+shapeToColor MirroredL = Green
+shapeToColor Line      = Purple
+shapeToColor Square    = Red
+
+colorToHex :: TetrisColor -> String
+colorToHex Cyan   = "#00FFFF"
+colorToHex Blue   = "#0000FF"
+colorToHex Orange = "#FFA500"
+colorToHex Yellow = "#FFFF00"
+colorToHex Green  = "#008000"
+colorToHex Purple = "#800080"
+colorToHex Red    = "#FF0000"
+
+shapeToHexColor :: TetrisShape -> String
+shapeToHexColor = colorToHex <<< shapeToColor
+
 initialPos :: TetrisShape -> Shape Coordinate
 initialPos = posToCoord <<< initialPos'
 
