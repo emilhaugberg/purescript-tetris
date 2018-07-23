@@ -2,8 +2,9 @@ module Tetris.Shape where
 
 import Prelude
 import Config
-import Data.Tuple
 import Math
+
+import Data.Tuple
 
 data Block a = Block a a a a
 data Shape   = Z | T | L | S | MirroredL | Line | Square

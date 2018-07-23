@@ -2,6 +2,7 @@ module Config where
 
 import Prelude
 import Math
+
 import Data.Int (toNumber)
 import Data.Tuple
 

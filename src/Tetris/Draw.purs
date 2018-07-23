@@ -1,13 +1,16 @@
 module Tetris.Draw where
 
-import Tetris.Shape as Tetris
 import Config (Coordinate, Direction(..))
 import Config as Config
 import Prelude
 import Effect (Effect, foreachE)
+
+import Tetris.Shape as Tetris
+
 import Data.Array (range)
 import Data.Int
 import Data.Tuple (Tuple(..), fst, snd)
+
 import Graphics.Canvas
 
 coordinateToRectangle :: Coordinate -> Rectangle
@@ -43,10 +46,10 @@ drawGrid numH numV ctx = do
   drawLines numH Horizontal ctx
   drawLines numV Vertical   ctx
 
-drawShape :: forall a. Tetris.Shape -> Context2D -> Effect Unit
-drawShape s ctx = drawRects (Tetris.initialPos s)
+drawShape :: forall a. Tetris.Block Coordinate -> Tetris.Shape -> Context2D -> Effect Unit
+drawShape bc s ctx = drawRects (Tetris.initialPos s)
   where
-    drawRects r = foreachE (Tetris.blockToArr $ Tetris.initialPos s) \i -> do
+    drawRects r = foreachE (Tetris.blockToArr bc) \i -> do
       let r = coordinateToRectangle i
 
       rect     ctx r

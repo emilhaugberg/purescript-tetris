@@ -14,7 +14,9 @@
     "purescript-maybe": "^4.0.0",
     "purescript-tuples": "^5.0.0",
     "purescript-arrays": "^5.0.0",
-    "purescript-integers": "^4.0.0"
+    "purescript-integers": "^4.0.0",
+    "purescript-refs": "^4.1.0",
+    "purescript-js-timers": "^4.0.1"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0"
