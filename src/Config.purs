@@ -8,7 +8,7 @@ import Data.Tuple
 -- TYPES
 type X          = Number
 type Y          = Number
-type Coordinate = Tuple X Y
+type Coordinate = {x :: X, y :: Y}
 
 data Direction  = Horizontal | Vertical
 
