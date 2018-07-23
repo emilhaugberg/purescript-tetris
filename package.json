@@ -1,0 +1,20 @@
+{
+  "name": "tetris",
+  "version": "1.0.0",
+  "description": "Tetris game made in PureScript.",
+  "main": "index.js",
+  "author": "Emil Haugberg",
+  "license": "MIT",
+  "dependencies": {
+    "pulp": "^12.3.0",
+    "purescript": "^0.12.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
+  },
+  "scripts": {
+    "build": "./node_modules/bin/pulp build && webpack"
+  }
+}
