@@ -35,11 +35,12 @@ main :: Partial => Effect Unit
 main = void  do
   Just canvas <- getCanvasElementById "tetris-canvas"
   ctx         <- getContext2D canvas
-  shape       <- new Tetris.L
-  pos         <- new $ Tetris.initialPos Tetris.L
+  shape       <- new Tetris.Square
+  pos         <- new $ Tetris.initialPos Tetris.Square
   evF         <- eventL pos
 
   addEventListener keyupEvent evF false window
+
   _ <- setInterval 50 $ void do
     clearRect ctx {x: 0.0, y: 0.0, width: Config.canvasWidth, height: Config.canvasHeight}
     Tetris.drawGrid  Config.numHorizontalBlocks Config.numVerticalBlocks ctx
@@ -50,4 +51,4 @@ main = void  do
     Tetris.drawShape p s ctx
 
   setInterval 1000 $ void do
-    modify updatePos pos
+    modify (Tetris.moveBlocks' Tetris.Down) pos

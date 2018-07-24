@@ -47,7 +47,7 @@ drawGrid numH numV ctx = do
   drawLines numV Vertical   ctx
 
 drawShape :: forall a. Tetris.Block Coordinate -> Tetris.Shape -> Context2D -> Effect Unit
-drawShape bc s ctx = drawRects (Tetris.initialPos s)
+drawShape bc s ctx = drawRects bc
   where
     drawRects r = foreachE (Tetris.blockToArr bc) \i -> do
       let r = coordinateToRectangle i

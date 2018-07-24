@@ -21,19 +21,20 @@ shapeToColor :: Shape -> String
 shapeToColor = case _ of
    Z         -> "#00FFFF"
    T         -> "#0000FF"
-   L         -> "#FFA500"
    S         -> "#FFFF00"
+   L         -> "#FFA500"
    MirroredL -> "#008000"
    Line      -> "#800080"
    Square    -> "#FF0000"
 
 initialPos' :: Shape -> Block Number
-initialPos' Z = Block (-4.0) 0.0 1.0 5.0
-initialPos' T = Block (-4.0) 0.0 1.0 4.0
-initialPos' L = Block (-4.0) 0.0 4.0 5.0
-initialPos' _ = Block test test test test
-  where
-    test = (-4.0)
+initialPos' Z         = Block (-4.0)   0.0  1.0 5.0
+initialPos' T         = Block (-4.0)   0.0  1.0 4.0
+initialPos' S         = Block   0.0    1.0  5.0 6.0
+initialPos' L         = Block (-4.0)   0.0  4.0 5.0
+initialPos' MirroredL = Block (-4.0) (-1.0) 0.0 4.0
+initialPos' Line      = Block (-8.0) (-4.0) 0.0 4.0
+initialPos' Square    = Block   0.0    1.0  4.0 5.0
 
 blocksToCoord :: Block Number -> Block Coordinate
 blocksToCoord = map f
