@@ -5,18 +5,14 @@ import Config as Config
 
 import Data.Maybe (Maybe(..))
 import Data.Traversable
-
 import Effect (Effect)
 import Effect.Console (log)
 import Effect.Ref
 import Effect.Timer
-
 import Graphics.Canvas
-
 import Tetris.Shape as Tetris
 import Tetris.Draw  as Tetris
 import Tetris.Move  as Tetris
-
 import Web.Event.Event
 import Web.Event.EventTarget
 import Web.Event.Internal.Types

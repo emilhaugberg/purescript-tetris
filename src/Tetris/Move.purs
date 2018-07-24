@@ -21,7 +21,7 @@ moveBlocks' :: Direction -> Block C.Coordinate -> Block C.Coordinate
 moveBlocks' dir = map \c -> case dir of
   Left  -> {x: c.x - C.blockWidth, y: c.y}
   Right -> {x: c.x + C.blockWidth, y: c.y}
-  Down  -> {x: c.x, y: C.blockHeight}
+  Down  -> {x: c.x, y: c.y + C.blockHeight}
 
 moveBlocks :: KeyCode -> Block C.Coordinate -> Block C.Coordinate
 moveBlocks kc b = case keyCodeToDirection kc of
