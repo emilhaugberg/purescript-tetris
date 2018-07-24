@@ -35,7 +35,7 @@ main :: Partial => Effect Unit
 main = void  do
   Just canvas <- getCanvasElementById "tetris-canvas"
   ctx         <- getContext2D canvas
-  shape       <- new Tetris.Square
+  shape       <- new   Tetris.Square
   pos         <- new $ Tetris.initialPos Tetris.Square
   evF         <- eventL pos
 

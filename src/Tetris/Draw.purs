@@ -21,25 +21,27 @@ coordinateToRectangle c =
   , height: Config.blockHeight
   }
 
-drawLine :: Coordinate -> Coordinate -> Context2D -> Effect Unit
-drawLine from to ctx = do
+drawLine :: Tuple Coordinate Coordinate -> Context2D -> Effect Unit
+drawLine points ctx = do
   beginPath ctx
   moveTo    ctx from.x from.y
   lineTo    ctx to.x   to.y
   stroke    ctx
+  where
+    from = fst points
+    to   = snd points
 
 drawLines :: Int -> Direction -> Context2D -> Effect Unit
 drawLines numL dir ctx = foreachE (range 0 numL) line
   where
-    line                = \i -> do drawLine (fst $ pos i dir) (snd $ pos i dir) ctx
-    startVertical   i   = {x: 0.0, y: (offset i dir)}
-    startHorizontal i   = {x: (offset i dir), y: 0.0}
-    endVertical     i   = {x: Config.canvasWidth, y: (offset i dir)}
-    endHorizontal   i   = {x: (offset i dir), y: Config.canvasHeight}
+    line                = \i -> do drawLine (pos i dir) ctx
+    startVertical   i   = {x: 0.0, y: (offset i Config.canvasHeight)}
+    startHorizontal i   = {x: (offset i Config.canvasWidth), y: 0.0}
+    endVertical     i   = {x: Config.canvasWidth, y: (offset i Config.canvasHeight)}
+    endHorizontal   i   = {x: (offset i Config.canvasWidth), y: Config.canvasHeight}
     pos    i Horizontal = Tuple (startHorizontal i) (endHorizontal i)
     pos    i Vertical   = Tuple (startVertical i)   (endVertical i)
-    offset i Horizontal = (Config.canvasWidth  / (toNumber numL)) * (toNumber i)
-    offset i Vertical   = (Config.canvasHeight / (toNumber numL)) * (toNumber i)
+    offset i max        = (max  / (toNumber numL)) * (toNumber i)
 
 drawGrid :: Int -> Int -> Context2D -> Effect Unit
 drawGrid numH numV ctx = do
