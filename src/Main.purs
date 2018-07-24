@@ -17,11 +17,18 @@ import Web.Event.Event
 import Web.Event.EventTarget
 import Web.Event.Internal.Types
 
+foreign import window  :: EventTarget
+foreign import keyCode :: Event -> Int
+
+type X     =  { shape :: Tetris.Shape, pos :: Tetris.Block Config.Coordinate }
+
+type State =
+  { current :: X
+  , previous:: Array X
+  }
+
 keyupEvent :: EventType
 keyupEvent = EventType "keydown"
-
-foreign import window :: EventTarget
-foreign import keyCode :: Event -> Int
 
 updatePos :: Tetris.Block Config.Coordinate -> Tetris.Block Config.Coordinate
 updatePos = map \p -> {x: p.x, y: p.y + Config.blockHeight}
