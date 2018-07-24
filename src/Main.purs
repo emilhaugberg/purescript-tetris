@@ -36,6 +36,7 @@ updatePos = map \p -> {x: p.x, y: p.y + Config.blockHeight}
 keyPress :: Ref (Tetris.Block Config.Coordinate) -> Event -> Effect Unit
 keyPress ref e = void $ modify (Tetris.moveBlocks (keyCode e)) ref
 
+eventL :: forall a. Ref a -> EventListener
 eventL ref = eventListener (keyPress ref)
 
 main :: Partial => Effect Unit
