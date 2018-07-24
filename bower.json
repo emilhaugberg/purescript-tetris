@@ -17,7 +17,10 @@
     "purescript-integers": "^4.0.0",
     "purescript-refs": "^4.1.0",
     "purescript-js-timers": "^4.0.1",
-    "purescript-web-events": "^1.0.0"
+    "purescript-web-events": "^1.0.0",
+    "bower": "*",
+    "install": "^1.0.4",
+    "purescript-random": "^4.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0"

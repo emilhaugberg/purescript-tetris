@@ -27,6 +27,17 @@ shapeToColor = case _ of
    Line      -> "#800080"
    Square    -> "#FF0000"
 
+intToShape :: Int -> Shape
+intToShape i = case i of
+  1 -> Z
+  2 -> T
+  3 -> L
+  4 -> S
+  5 -> MirroredL
+  6 -> Line
+  7 -> Square
+  _ -> Z
+
 initialPos' :: Shape -> Block Number
 initialPos' Z         = Block (-4.0)   0.0  1.0 5.0
 initialPos' T         = Block (-4.0)   0.0  1.0 4.0
