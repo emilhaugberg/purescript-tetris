@@ -37,7 +37,7 @@ type State =
 initialState :: State
 initialState = {current: {shape: s, pos: Tetris.initialPos s, rotation: Tetris.Two}, previous: []}
   where
-    s = Tetris.Line
+    s = Tetris.S
 
 keydownEvent :: EventType
 keydownEvent = EventType "keydown"
@@ -51,7 +51,7 @@ keyPress ref e = void $ modify move' ref
     move' c =
       { current: { shape   : c.current.shape
                  , pos     : Tetris.nextCoord (keyCode e) c.current.shape c.current.rotation c.current.pos
-                 , rotation: Tetris.nextRotation c.current.rotation}
+                 , rotation: Tetris.nextRotation c.current.rotation (keyCode e)}
       , previous: c.previous
       }
 
@@ -78,5 +78,5 @@ main = void  do
 
     Tetris.drawShape s.current.pos s.current.shape ctx
 
-  setInterval 1000 $ void do
+  setInterval 10000000 $ void do
     modify (\c -> {current: {shape: c.current.shape, pos: Tetris.moveBlocks Tetris.Down c.current.pos, rotation: c.current.rotation}, previous: c.previous}) state

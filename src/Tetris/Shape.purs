@@ -41,9 +41,9 @@ intToShape i = case i of
   _ -> Z
 
 initialPos' :: Shape -> Block Number
-initialPos' Z         = Block (-4.0)   0.0  1.0 5.0
 initialPos' T         = Block (-4.0)   0.0  1.0 4.0
-initialPos' S         = Block   0.0    1.0  5.0 6.0
+initialPos' Z         = Block (-4.0)   0.0  1.0 5.0
+initialPos' S         = Block (-1.0)   1.0  0.0 4.0
 initialPos' L         = Block (-4.0)   0.0  4.0 5.0
 initialPos' MirroredL = Block (-4.0) (-1.0) 0.0 4.0
 initialPos' Line      = Block (-4.0)   0.0  4.0 8.0
