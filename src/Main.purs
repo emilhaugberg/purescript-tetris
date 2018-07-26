@@ -12,9 +12,10 @@ import Effect.Random
 import Effect.Ref
 import Effect.Timer
 import Graphics.Canvas
-import Tetris.Shape as Tetris
-import Tetris.Draw  as Tetris
-import Tetris.Move  as Tetris
+import Tetris.Shape  as Tetris
+import Tetris.Draw   as Tetris
+import Tetris.Move   as Tetris
+import Tetris.Rotate as Tetris
 import Web.Event.Event
 import Web.Event.EventTarget
 import Web.Event.Internal.Types
@@ -22,7 +23,11 @@ import Web.Event.Internal.Types
 foreign import window  :: EventTarget
 foreign import keyCode :: Event -> Int
 
-type X     =  { shape :: Tetris.Shape, pos :: Tetris.Block Config.Coordinate }
+type X =
+  { shape    :: Tetris.Shape
+  , pos      :: Tetris.Block Config.Coordinate
+  , rotation :: Tetris.Rotation
+  }
 
 type State =
   { current :: X
@@ -30,9 +35,9 @@ type State =
   }
 
 initialState :: State
-initialState = {current: {shape: s, pos: Tetris.initialPos s}, previous: []}
+initialState = {current: {shape: s, pos: Tetris.initialPos s, rotation: Tetris.Two}, previous: []}
   where
-    s = Tetris.T
+    s = Tetris.Line
 
 keydownEvent :: EventType
 keydownEvent = EventType "keydown"
@@ -43,7 +48,12 @@ updatePos = map \p -> {x: p.x, y: p.y + Config.blockHeight}
 keyPress :: Ref State -> Event -> Effect Unit
 keyPress ref e = void $ modify move' ref
   where
-    move' c = {current: {shape: c.current.shape, pos: Tetris.moveBlocks (keyCode e) c.current.pos}, previous: c.previous}
+    move' c =
+      { current: { shape   : c.current.shape
+                 , pos     : Tetris.nextCoord (keyCode e) c.current.shape c.current.rotation c.current.pos
+                 , rotation: Tetris.nextRotation c.current.rotation}
+      , previous: c.previous
+      }
 
 eventL :: Ref State -> Effect EventListener
 eventL ref = eventListener (keyPress ref)
@@ -69,4 +79,4 @@ main = void  do
     Tetris.drawShape s.current.pos s.current.shape ctx
 
   setInterval 1000 $ void do
-    modify (\c -> {current: {shape: c.current.shape, pos: Tetris.moveBlocks' Tetris.Down c.current.pos}, previous: c.previous}) state
+    modify (\c -> {current: {shape: c.current.shape, pos: Tetris.moveBlocks Tetris.Down c.current.pos, rotation: c.current.rotation}, previous: c.previous}) state

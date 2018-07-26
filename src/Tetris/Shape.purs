@@ -12,7 +12,9 @@ data Shape   = Z | T | L | S | MirroredL | Line | Square
 derive instance functorBlock :: Functor Block
 
 initialPos :: Shape -> Block Coordinate
-initialPos = blocksToCoord <<< initialPos'
+initialPos = blocksToCoord centerX 0.0 <<< initialPos'
+  where
+    centerX = (roundToNearest (canvasWidth / 2.0) blockWidth) - blockWidth
 
 blockToArr :: forall a. Block a -> Array a
 blockToArr (Block a b c d) = [a, b, c, d]
@@ -44,13 +46,12 @@ initialPos' T         = Block (-4.0)   0.0  1.0 4.0
 initialPos' S         = Block   0.0    1.0  5.0 6.0
 initialPos' L         = Block (-4.0)   0.0  4.0 5.0
 initialPos' MirroredL = Block (-4.0) (-1.0) 0.0 4.0
-initialPos' Line      = Block (-8.0) (-4.0) 0.0 4.0
+initialPos' Line      = Block (-4.0)   0.0  4.0 8.0
 initialPos' Square    = Block   0.0    1.0  4.0 5.0
 
-blocksToCoord :: Block Number -> Block Coordinate
-blocksToCoord = map f
+blocksToCoord :: Number -> Number -> Block Number -> Block Coordinate
+blocksToCoord cx cy = map f
   where
     f     i = {x: x i, y: y i}
-    x       = (+) centerX <<< (*) blockWidth <<< floor <<< \i -> i / 4.0
-    y     i = (abs (i % 4.0)) * blockHeight
-    centerX = (roundToNearest (canvasWidth / 2.0) blockWidth) - blockWidth
+    x       = (+) cx <<< (*) blockWidth <<< floor <<< \i -> i / 4.0
+    y     i = cy + (abs (i % 4.0)) * blockHeight
