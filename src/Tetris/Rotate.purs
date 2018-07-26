@@ -27,20 +27,26 @@ rotation sh rot bc = blocksToCoord x y coordNum
 startX :: Shape -> Rotation -> Block Coordinate -> Number
 startX sh rt (Block a b c d) = case sh of
   Square -> a.x
-  Line   -> l rt (Block a b c d)
+  Line   -> lx rt (Block a b c d)
   _      -> a.x
 
-l :: Rotation -> Block Coordinate -> Number
-l One (Block a b c d)   = b.x
-l Two (Block a b c d)   = c.x
-l Three (Block a b c d) = c.x - blockWidth
-l Four (Block a b c d)  = b.x
+lx :: Rotation -> Block Coordinate -> Number
+lx One (Block a b c d)   = b.x
+lx Two (Block a b c d)   = c.x
+lx Three (Block a b c d) = c.x - blockWidth
+lx Four (Block a b c d)  = b.x
 
 startY :: Shape -> Rotation -> Block Coordinate ->Number
 startY sh rt (Block a b c d) = case sh of
   Square -> a.y
-  Line   -> if rt == One || rt == Three then b.y else a.y
+  Line   -> ly rt (Block a b c d)
   _      -> a.y
+
+ly :: Rotation -> Block Coordinate -> Number
+ly One   (Block a b c d) = b.y
+ly Two   (Block a b c d) = c.y
+ly Three (Block a b c d) = b.y - blockHeight
+ly Four  (Block a b c d) = c.y
 
 rotations :: Shape -> Transformation
 rotations sh = case sh of
