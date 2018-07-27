@@ -37,7 +37,7 @@ type State =
 initialState :: State
 initialState = {current: {shape: s, pos: Tetris.initialPos s, rotation: Tetris.Two}, previous: []}
   where
-    s = Tetris.S
+    s = Tetris.T
 
 keydownEvent :: EventType
 keydownEvent = EventType "keydown"

@@ -32,16 +32,36 @@ rotations sh = case sh of
   Line   -> {one: initLine, two: sndLine, three: initLine , four: sndLine}
   Z      -> {one: initZ, two: sndZ, three: initZ , four: sndZ}
   S      -> {one: initS, two: sndS, three: initS , four: sndS}
-  _      -> {one: initSq  , two: initSq , three: initSq   , four: initSq }
+  L      -> {one: initL, two: sndL, three: thirdL , four: fourthL }
+  MirroredL -> {one: initMl, two: sndMl, three: thirdMl , four: fourthML }
+  T      -> {one: initT  , two: sndT , three: thirdT, four: fourthT }
 
   where
     initSq   = initialPos' Square
+
     initLine = initialPos' Line
     sndLine  = Block 0.0 1.0 2.0 3.0
+
     initZ    = initialPos' Z
     sndZ     = Block 0.0 1.0 (-1.0) (-2.0)
+
     initS    = initialPos' S
     sndS     = Block (-4.0) (-1.0) 1.0 2.0
+
+    initL    = initialPos' L
+    sndL     = Block 0.0 1.0 2.0 (-2.0)
+    thirdL   = Block 6.0 (2.0) (-1.0) (-2.0)
+    fourthL  = Block 4.0 2.0 1.0 0.0
+
+    initMl   = initialPos' MirroredL
+    sndMl    = Block (-4.0) 0.0 1.0 2.0
+    thirdMl  = Block (-1.0) 1.0 4.0 5.0
+    fourthML = Block 0.0 1.0 2.0 6.0
+
+    initT    = initialPos' T
+    sndT     = Block (-1.0) 0.0 1.0 2.0
+    thirdT   = Block (-1.0) 0.0 1.0 5.0
+    fourthT  = Block 0.0 1.0 2.0 5.0
 
 rotationToCoords :: Rotation -> Shape -> Block Number
 rotationToCoords rt sh = case rt of
@@ -61,14 +81,6 @@ nextRotation' One   = Two
 nextRotation' Two   = Three
 nextRotation' Three = Four
 nextRotation' Four  = One
-
-rotationPoint :: Shape -> RotationPoint
-rotationPoint sh = case sh of
-  Square -> 0
-  T      -> 1
-  Line   -> 1
-  _      -> 3
-
 
 f1 :: Shape -> SOM -> Z
 f1 L y = y.l
