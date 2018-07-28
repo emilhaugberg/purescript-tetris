@@ -11,7 +11,7 @@ type RotationPoints =
   , four  :: {x :: Number,  y :: Number}
   }
 
-type SOM = {
+type ShapesRotationPoints = {
   l      :: RotationPoints,
   z      :: RotationPoints,
   t      :: RotationPoints,
@@ -28,7 +28,7 @@ type Transformation =
   , four  :: Block Number
   }
 
-rotationCoords :: Block Coordinate -> SOM
+rotationCoords :: Block Coordinate -> ShapesRotationPoints
 rotationCoords (Block a b c d) =
   { l:      {one: {x: b.x, y: a.y}, two: {x: b.x, y: b.y - blockHeight        }, three: {x: b.x             , y: b.y - blockHeight}, four: {x: b.x, y: c.y                      }}
   , z:      {one: {x: b.x, y: b.y}, two: {x: d.x, y: c.y - (blockHeight * 2.0)}, three: {x: c.x             , y: b.y              }, four: {x: b.x, y: c.y - (blockHeight * 2.0)}}
