@@ -13,8 +13,8 @@ data Block a        = Block a a a a
 derive instance eqRotation   :: Eq Rotation
 derive instance functorBlock :: Functor Block
 
-type RotationPoint        = Int
 
+type RotationPoint        = Int
 type RotationPoints       =
   { one   :: {x :: Number,  y :: Number}
   , two   :: {x :: Number,  y :: Number}

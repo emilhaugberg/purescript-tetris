@@ -49,7 +49,7 @@ drawGrid numH numV ctx = do
   drawLines numH Tetris.Horizontal ctx
   drawLines numV Tetris.Vertical   ctx
 
-drawShape :: forall a. Tetris.Block Tetris.Coordinate -> Tetris.Shape -> Context2D -> Effect Unit
+drawShape :: Tetris.Block Tetris.Coordinate -> Tetris.Shape -> Context2D -> Effect Unit
 drawShape bc s ctx = drawRects bc
   where
     drawRects r = foreachE (Tetris.blockToArr bc) \i -> do
@@ -59,3 +59,8 @@ drawShape bc s ctx = drawRects bc
       setFillStyle ctx (Tetris.shapeToColor s)
       fillRect ctx r
       stroke   ctx
+
+
+drawShapes :: Array Tetris.BlockShape -> Context2D -> Effect Unit
+drawShapes arr ctx = foreachE arr \i -> do
+  drawShape i.pos i.shape ctx

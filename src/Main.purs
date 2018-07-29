@@ -3,6 +3,7 @@ module Main where
 import Prelude
 import Config as Config
 
+import Data.Array
 import Data.Maybe (Maybe(..))
 import Data.Traversable
 import Data.Unit
@@ -45,6 +46,13 @@ keyPress ref e = void $ modify move' ref
       , previous: c.previous
       }
 
+checkCollision :: Tetris.Shape -> Ref Tetris.State -> Effect Unit
+checkCollision sh ref = void $ modify coll ref
+  where
+    coll state = if Tetris.checkIfCollided state.current state.previous then next state else state
+    next st    = {current: {shape: sh, pos: Tetris.initialPos sh, rotation: Tetris.Two}, previous: snoc st.previous st.current}
+
+
 eventL :: Ref Tetris.State -> Effect EventListener
 eventL ref = eventListener (keyPress ref)
 
@@ -65,8 +73,12 @@ main = void do
     clearRect ctx {x: 0.0, y: 0.0, width: Config.canvasWidth, height: Config.canvasHeight}
     Tetris.drawGrid  Config.numHorizontalBlocks Config.numVerticalBlocks ctx
 
+    sh <- randomShape
+    checkCollision sh state
+
     s <- read state
 
+    Tetris.drawShapes s.previous ctx
     Tetris.drawShape s.current.pos s.current.shape ctx
 
   setInterval 1000 $ void do
