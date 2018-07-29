@@ -4,11 +4,11 @@ import Prelude
 import Data.Ord
 
 data Rotation       = One | Two | Three | Four
-data Block a        = Block a a a a
 data Shape          = Z | T | L | S | MirroredL | Line | Square
 data Action         = Move Direction | Rotate
 data Direction      = Left | Right | Down
 data LineDirection  = Horizontal | Vertical
+data Block a        = Block a a a a
 
 derive instance eqRotation   :: Eq Rotation
 derive instance functorBlock :: Functor Block

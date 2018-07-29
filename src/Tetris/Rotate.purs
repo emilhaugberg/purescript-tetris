@@ -8,7 +8,7 @@ import Data.Ord
 
 import Tetris.Shape
 import Tetris.Types
-import Tetris.Rotation.Helper
+import Tetris.Rotate.Helper
 
 rotation :: Shape -> Rotation -> Block Coordinate -> Block Coordinate
 rotation sh rot bc = checkSides $ blocksToCoord x y coordNum

@@ -1,4 +1,4 @@
-module Tetris.Rotation.Helper where
+module Tetris.Rotate.Helper where
 
 import Config
 import Prelude

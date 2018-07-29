@@ -52,7 +52,7 @@ randomShape :: Effect Tetris.Shape
 randomShape = Tetris.intToShape <$> randomInt 1 7
 
 main :: Partial => Effect Unit
-main = void  do
+main = void do
   Just canvas <- getCanvasElementById "tetris-canvas"
   ctx         <- getContext2D canvas
   sh          <- randomShape
