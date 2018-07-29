@@ -22,9 +22,11 @@ moveBlocks :: Direction -> Block Coordinate -> Block Coordinate
 moveBlocks dir bc = map f bc
   where
     f c = case dir of
-      Left  -> if movePossible Left  bc then {x: c.x - C.blockWidth, y: c.y} else c
-      Right -> if movePossible Right bc then {x: c.x + C.blockWidth, y: c.y} else c
-      Down  -> if movePossible Down  bc then {x: c.x, y: c.y + C.blockHeight} else c
+      Left  -> mv Left  {x: c.x - C.blockWidth, y: c.y}                 c
+      Right -> mv Right {x: c.x + C.blockWidth, y: c.y}                 c
+      Down  -> mv Down  {x: c.x,                y: c.y + C.blockHeight} c
+
+    mv dir coord c = if movePossible dir bc then coord else c
 
 nextCoord :: KeyCode -> Shape -> Rotation -> Block Coordinate -> Block Coordinate
 nextCoord kc sh rt b = case keyCodeToAction kc of

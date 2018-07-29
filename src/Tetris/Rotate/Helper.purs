@@ -6,6 +6,27 @@ import Prelude
 import Tetris.Shape
 import Tetris.Types
 
+nextRotation' :: Rotation -> Rotation
+nextRotation' One   = Two
+nextRotation' Two   = Three
+nextRotation' Three = Four
+nextRotation' Four  = One
+
+rotationPointsFromShape :: Shape -> ShapesRotationPoints -> RotationPoints
+rotationPointsFromShape L         srp = srp.l
+rotationPointsFromShape Z         srp = srp.z
+rotationPointsFromShape T         srp = srp.t
+rotationPointsFromShape S         srp = srp.s
+rotationPointsFromShape MirroredL srp = srp.mirrl
+rotationPointsFromShape Line      srp = srp.line
+rotationPointsFromShape Square    srp = srp.square
+
+coordFromRotationAngle' :: RotationPoints -> Rotation -> { x :: Number, y :: Number }
+coordFromRotationAngle' z One   = z.one
+coordFromRotationAngle' z Two   = z.two
+coordFromRotationAngle' z Three = z.three
+coordFromRotationAngle' z Four  = z.four
+
 rotationCoords :: Block Coordinate -> ShapesRotationPoints
 rotationCoords (Block a b c d) =
   { l:      {one: {x: b.x, y: a.y}, two: {x: b.x, y: b.y - blockHeight        }, three: {x: b.x             , y: b.y - blockHeight}, four: {x: b.x, y: c.y                      }}

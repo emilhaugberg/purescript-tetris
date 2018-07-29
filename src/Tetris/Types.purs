@@ -13,14 +13,15 @@ data Block a        = Block a a a a
 derive instance eqRotation   :: Eq Rotation
 derive instance functorBlock :: Functor Block
 
-
 type RotationPoint        = Int
+
 type RotationPoints       =
   { one   :: {x :: Number,  y :: Number}
   , two   :: {x :: Number,  y :: Number}
   , three :: {x :: Number,  y :: Number}
   , four  :: {x :: Number,  y :: Number}
   }
+
 type ShapesRotationPoints =
  { l      :: RotationPoints
  , z      :: RotationPoints
@@ -30,12 +31,14 @@ type ShapesRotationPoints =
  , line   :: RotationPoints
  , square :: RotationPoints
 }
+
 type Transformation       =
   { one   :: Block Number
   , two   :: Block Number
   , three :: Block Number
   , four  :: Block Number
   }
+
 type KeyCode              = Int
 
 type BlockShape           =
@@ -43,6 +46,7 @@ type BlockShape           =
   , pos      :: Block Coordinate
   , rotation :: Rotation
   }
+
 type State                 =
   { current :: BlockShape
   , previous:: Array BlockShape

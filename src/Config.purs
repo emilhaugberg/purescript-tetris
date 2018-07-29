@@ -6,7 +6,6 @@ import Math
 import Data.Int (toNumber)
 import Data.Tuple
 
--- GAME CONFIG
 numHorizontalBlocks :: Int
 numHorizontalBlocks = 10
 
@@ -25,6 +24,5 @@ blockWidth          = canvasWidth / toNumber numHorizontalBlocks
 blockHeight         :: Number
 blockHeight         = canvasHeight / toNumber numVerticalBlocks
 
--- HELPER FUNCTIONS
 roundToNearest :: Number -> Number -> Number
 roundToNearest x nearest = round (x / nearest) * nearest
