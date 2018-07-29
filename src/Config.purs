@@ -6,13 +6,6 @@ import Math
 import Data.Int (toNumber)
 import Data.Tuple
 
--- TYPES
-type X          = Number
-type Y          = Number
-type Coordinate = {x :: X, y :: Y}
-
-data Direction  = Horizontal | Vertical
-
 -- GAME CONFIG
 numHorizontalBlocks :: Int
 numHorizontalBlocks = 10

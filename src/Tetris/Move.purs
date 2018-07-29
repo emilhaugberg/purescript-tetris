@@ -8,10 +8,7 @@ import Data.Maybe
 
 import Tetris.Shape
 import Tetris.Rotate
-
-data Action    = Move Direction | Rotate
-data Direction = Left | Right | Down
-type KeyCode   = Int
+import Tetris.Types
 
 keyCodeToAction :: KeyCode -> Maybe Action
 keyCodeToAction kc = case kc of
@@ -21,7 +18,7 @@ keyCodeToAction kc = case kc of
   38 -> Just Rotate
   _  -> Nothing
 
-moveBlocks :: Direction -> Block C.Coordinate -> Block C.Coordinate
+moveBlocks :: Direction -> Block Coordinate -> Block Coordinate
 moveBlocks dir bc = map f bc
   where
     f c = case dir of
@@ -29,13 +26,13 @@ moveBlocks dir bc = map f bc
       Right -> if movePossible Right bc then {x: c.x + C.blockWidth, y: c.y} else c
       Down  -> if movePossible Down  bc then {x: c.x, y: c.y + C.blockHeight} else c
 
-nextCoord :: KeyCode -> Shape -> Rotation -> Block C.Coordinate -> Block C.Coordinate
+nextCoord :: KeyCode -> Shape -> Rotation -> Block Coordinate -> Block Coordinate
 nextCoord kc sh rt b = case keyCodeToAction kc of
   Just (Move dir) -> moveBlocks dir b
   Just (Rotate)   -> rotation sh rt b
   _               -> b
 
-movePossible :: Direction -> Block C.Coordinate -> Boolean
+movePossible :: Direction -> Block Coordinate -> Boolean
 movePossible dir bc = foldl f true $ blockToArr bc
   where
     f = case dir of

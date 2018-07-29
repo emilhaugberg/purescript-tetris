@@ -1,11 +1,12 @@
 module Tetris.Draw where
 
-import Config (Coordinate, Direction(..))
+import Config
 import Config as Config
 import Prelude
 import Effect (Effect, foreachE)
 
 import Tetris.Shape as Tetris
+import Tetris.Types as Tetris
 
 import Data.Array (range)
 import Data.Int
@@ -13,7 +14,7 @@ import Data.Tuple (Tuple(..), fst, snd)
 
 import Graphics.Canvas
 
-coordinateToRectangle :: Coordinate -> Rectangle
+coordinateToRectangle :: Tetris.Coordinate -> Rectangle
 coordinateToRectangle c =
   { x     : c.x
   , y     : c.y
@@ -21,7 +22,7 @@ coordinateToRectangle c =
   , height: Config.blockHeight
   }
 
-drawLine :: Tuple Coordinate Coordinate -> Context2D -> Effect Unit
+drawLine :: Tuple Tetris.Coordinate Tetris.Coordinate -> Context2D -> Effect Unit
 drawLine points ctx = do
   beginPath ctx
   moveTo    ctx from.x from.y
@@ -31,24 +32,24 @@ drawLine points ctx = do
     from = fst points
     to   = snd points
 
-drawLines :: Int -> Direction -> Context2D -> Effect Unit
+drawLines :: Int -> Tetris.LineDirection -> Context2D -> Effect Unit
 drawLines numL dir ctx = foreachE (range 0 numL) line
   where
-    line                = \i -> do drawLine (pos i dir) ctx
-    startVertical   i   = {x: 0.0, y: (offset i Config.canvasHeight)}
-    startHorizontal i   = {x: (offset i Config.canvasWidth), y: 0.0}
-    endVertical     i   = {x: Config.canvasWidth, y: (offset i Config.canvasHeight)}
-    endHorizontal   i   = {x: (offset i Config.canvasWidth), y: Config.canvasHeight}
-    pos    i Horizontal = Tuple (startHorizontal i) (endHorizontal i)
-    pos    i Vertical   = Tuple (startVertical i)   (endVertical i)
-    offset i max        = (max  / (toNumber numL)) * (toNumber i)
+    line                       = \i -> do drawLine (pos i dir) ctx
+    startVertical   i          = {x: 0.0, y: (offset i Config.canvasHeight)}
+    startHorizontal i          = {x: (offset i Config.canvasWidth), y: 0.0}
+    endVertical     i          = {x: Config.canvasWidth, y: (offset i Config.canvasHeight)}
+    endHorizontal   i          = {x: (offset i Config.canvasWidth), y: Config.canvasHeight}
+    pos    i Tetris.Horizontal = Tuple (startHorizontal i) (endHorizontal i)
+    pos    i Tetris.Vertical   = Tuple (startVertical i)   (endVertical i)
+    offset i max               = (max  / (toNumber numL)) * (toNumber i)
 
 drawGrid :: Int -> Int -> Context2D -> Effect Unit
 drawGrid numH numV ctx = do
-  drawLines numH Horizontal ctx
-  drawLines numV Vertical   ctx
+  drawLines numH Tetris.Horizontal ctx
+  drawLines numV Tetris.Vertical   ctx
 
-drawShape :: forall a. Tetris.Block Coordinate -> Tetris.Shape -> Context2D -> Effect Unit
+drawShape :: forall a. Tetris.Block Tetris.Coordinate -> Tetris.Shape -> Context2D -> Effect Unit
 drawShape bc s ctx = drawRects bc
   where
     drawRects r = foreachE (Tetris.blockToArr bc) \i -> do

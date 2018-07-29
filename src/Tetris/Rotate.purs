@@ -7,12 +7,8 @@ import Data.Foldable
 import Data.Ord
 
 import Tetris.Shape
+import Tetris.Types
 import Tetris.Rotation.Helper
-
-type RotationPoint = Int
-data Rotation      = One | Two | Three | Four
-
-derive instance eqRotation :: Eq Rotation
 
 rotation :: Shape -> Rotation -> Block Coordinate -> Block Coordinate
 rotation sh rot bc = checkSides $ blocksToCoord x y coordNum
@@ -57,20 +53,25 @@ f2 z Three = z.three
 f2 z Four  = z.four
 
 f3 :: Block Coordinate -> Shape -> Rotation -> { x :: Number, y :: Number }
-f3 bc sh rot = x1
-  where
-    x1 = (flip f2) rot <<< rotationPointsFromShape sh <<< rotationCoords $ bc
-
-id a = a
+f3 bc sh rot = (flip f2) rot <<< rotationPointsFromShape sh <<< rotationCoords $ bc
 
 moveOutOfBoundsX :: Number -> (Number -> Number -> Number) -> (Number -> Number -> Number) -> Block Coordinate -> Block Coordinate
 moveOutOfBoundsX num f1 f2 (Block a b c d) = moveX
   where
     moveX       = Block {x: (xxx a.x), y: a.y}  {x: (xxx b.x), y: b.y} {x: (xxx c.x), y: c.y} {x: (xxx d.x), y: d.y}
-    xxx         = if outOfBounds < 0.0 || outOfBounds >= canvasWidth then f2 ((((abs outOfBounds) - num) / blockWidth) * blockWidth) else id
+    xxx         = if outOfBounds < 0.0 || outOfBounds >= canvasWidth then f2 ((((abs outOfBounds) - num) / blockWidth) * blockWidth) else identity
     outOfBounds = foldl (\a b -> f1 a b.x) num [a, b, c, d]
 
-moveOutOfBoundsXLeft  = moveOutOfBoundsX 0.0                        min (+)
-moveOutOfBoundsXRight = moveOutOfBoundsX (canvasWidth - blockWidth) max (flip (-))
+moveOutOfBoundsY :: Number -> (Number -> Number -> Number) -> (Number -> Number -> Number) -> Block Coordinate -> Block Coordinate
+moveOutOfBoundsY num f1 f2 (Block a b c d) = moveX
+  where
+    moveX       = Block {x: a.x, y: xxx a.y}  {x: b.x, y: xxx b.y} {x: c.x, y: xxx c.y} {x: d.x, y: xxx d.y}
+    xxx         = if outOfBounds < 0.0 || outOfBounds >= canvasHeight then f2 ((((abs outOfBounds) - num) / blockWidth) * blockWidth) else identity
+    outOfBounds = foldl (\a b -> f1 a b.y) num [a, b, c, d]
 
-checkSides = moveOutOfBoundsXLeft <<< moveOutOfBoundsXRight
+moveOutOfBoundsXRight  = moveOutOfBoundsX (canvasWidth  - blockWidth)  max (flip (-))
+moveOutOfBoundsXBottom = moveOutOfBoundsY (canvasHeight - blockHeight) max (flip (-))
+moveOutOfBoundsXLeft   = moveOutOfBoundsX 0.0                          min (+)
+moveOutOfBoundsXTop    = moveOutOfBoundsY 0.0                          min (+)
+
+checkSides = moveOutOfBoundsXTop <<< moveOutOfBoundsXBottom <<< moveOutOfBoundsXLeft <<< moveOutOfBoundsXRight

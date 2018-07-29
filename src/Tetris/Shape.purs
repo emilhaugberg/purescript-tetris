@@ -6,10 +6,7 @@ import Math
 
 import Data.Tuple
 
-data Block a = Block a a a a
-data Shape   = Z | T | L | S | MirroredL | Line | Square
-
-derive instance functorBlock :: Functor Block
+import Tetris.Types
 
 initialPos :: Shape -> Block Coordinate
 initialPos = blocksToCoord centerX 0.0 <<< initialPos'

@@ -2,31 +2,9 @@ module Tetris.Rotation.Helper where
 
 import Config
 import Prelude
+
 import Tetris.Shape
-
-type RotationPoints =
-  { one   :: {x :: Number,  y :: Number}
-  , two   :: {x :: Number,  y :: Number}
-  , three :: {x :: Number,  y :: Number}
-  , four  :: {x :: Number,  y :: Number}
-  }
-
-type ShapesRotationPoints = {
-  l      :: RotationPoints,
-  z      :: RotationPoints,
-  t      :: RotationPoints,
-  s      :: RotationPoints,
-  mirrl  :: RotationPoints,
-  line   :: RotationPoints,
-  square :: RotationPoints
-}
-
-type Transformation =
-  { one   :: Block Number
-  , two   :: Block Number
-  , three :: Block Number
-  , four  :: Block Number
-  }
+import Tetris.Types
 
 rotationCoords :: Block Coordinate -> ShapesRotationPoints
 rotationCoords (Block a b c d) =

@@ -12,10 +12,13 @@ import Effect.Random
 import Effect.Ref
 import Effect.Timer
 import Graphics.Canvas
+
 import Tetris.Shape  as Tetris
 import Tetris.Draw   as Tetris
 import Tetris.Move   as Tetris
 import Tetris.Rotate as Tetris
+import Tetris.Types  as Tetris
+
 import Web.Event.Event
 import Web.Event.EventTarget
 import Web.Event.Internal.Types
@@ -23,27 +26,16 @@ import Web.Event.Internal.Types
 foreign import window  :: EventTarget
 foreign import keyCode :: Event -> Int
 
-type X =
-  { shape    :: Tetris.Shape
-  , pos      :: Tetris.Block Config.Coordinate
-  , rotation :: Tetris.Rotation
-  }
-
-type State =
-  { current :: X
-  , previous:: Array X
-  }
-
-initialState :: Tetris.Shape -> State
+initialState :: Tetris.Shape -> Tetris.State
 initialState s = {current: {shape: s, pos: Tetris.initialPos s, rotation: Tetris.Two}, previous: []}
 
 keydownEvent :: EventType
 keydownEvent = EventType "keydown"
 
-updatePos :: Tetris.Block Config.Coordinate -> Tetris.Block Config.Coordinate
+updatePos :: Tetris.Block Tetris.Coordinate -> Tetris.Block Tetris.Coordinate
 updatePos = map \p -> {x: p.x, y: p.y + Config.blockHeight}
 
-keyPress :: Ref State -> Event -> Effect Unit
+keyPress :: Ref Tetris.State -> Event -> Effect Unit
 keyPress ref e = void $ modify move' ref
   where
     move' c =
@@ -53,7 +45,7 @@ keyPress ref e = void $ modify move' ref
       , previous: c.previous
       }
 
-eventL :: Ref State -> Effect EventListener
+eventL :: Ref Tetris.State -> Effect EventListener
 eventL ref = eventListener (keyPress ref)
 
 randomShape :: Effect Tetris.Shape
