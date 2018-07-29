@@ -16,7 +16,11 @@ rotation sh rot bc = checkSides $ blocksToCoord x y coordNum
     x        = coords.x
     y        = coords.y
     coordNum = rotationToCoords rot sh
-    coords   = f3 bc sh rot
+    coords   = coordFromRotationAngle bc sh rot
+
+coordFromRotationAngle :: Block Coordinate -> Shape -> Rotation -> { x :: Number, y :: Number }
+coordFromRotationAngle bc sh rot =
+  (flip coordFromRotationAngle') rot <<< rotationPointsFromShape sh <<< rotationCoords $ bc
 
 rotationToCoords :: Rotation -> Shape -> Block Number
 rotationToCoords rt sh = case rt of
@@ -46,32 +50,34 @@ rotationPointsFromShape MirroredL srp = srp.mirrl
 rotationPointsFromShape Line      srp = srp.line
 rotationPointsFromShape Square    srp = srp.square
 
-f2 :: RotationPoints -> Rotation -> { x :: Number, y :: Number }
-f2 z One   = z.one
-f2 z Two   = z.two
-f2 z Three = z.three
-f2 z Four  = z.four
+coordFromRotationAngle' :: RotationPoints -> Rotation -> { x :: Number, y :: Number }
+coordFromRotationAngle' z One   = z.one
+coordFromRotationAngle' z Two   = z.two
+coordFromRotationAngle' z Three = z.three
+coordFromRotationAngle' z Four  = z.four
 
-f3 :: Block Coordinate -> Shape -> Rotation -> { x :: Number, y :: Number }
-f3 bc sh rot = (flip f2) rot <<< rotationPointsFromShape sh <<< rotationCoords $ bc
-
-moveOutOfBoundsX :: Number -> (Number -> Number -> Number) -> (Number -> Number -> Number) -> Block Coordinate -> Block Coordinate
-moveOutOfBoundsX num f1 f2 (Block a b c d) = moveX
+checkOutOfBounds :: Number
+                 -> ((Number -> Number) -> Coordinate -> Coordinate)
+                 -> (Number -> Number -> Number)
+                 -> (Number -> Coordinate -> Number)
+                 -> Block Coordinate
+                 -> Block Coordinate
+checkOutOfBounds m mapF f1 f2 b = map (mapF f) b
   where
-    moveX       = Block {x: (xxx a.x), y: a.y}  {x: (xxx b.x), y: b.y} {x: (xxx c.x), y: c.y} {x: (xxx d.x), y: d.y}
-    xxx         = if outOfBounds < 0.0 || outOfBounds >= canvasWidth then f2 ((((abs outOfBounds) - num) / blockWidth) * blockWidth) else identity
-    outOfBounds = foldl (\a b -> f1 a b.x) num [a, b, c, d]
+    f           = if   outOfBounds < 0.0 || outOfBounds >= m
+                  then f1 (((abs outOfBounds) - m / blockWidth) * blockWidth)
+                  else identity
+    outOfBounds = foldl f2 m (blockToArr b)
 
-moveOutOfBoundsY :: Number -> (Number -> Number -> Number) -> (Number -> Number -> Number) -> Block Coordinate -> Block Coordinate
-moveOutOfBoundsY num f1 f2 (Block a b c d) = moveX
-  where
-    moveX       = Block {x: a.x, y: xxx a.y}  {x: b.x, y: xxx b.y} {x: c.x, y: xxx c.y} {x: d.x, y: xxx d.y}
-    xxx         = if outOfBounds < 0.0 || outOfBounds >= canvasHeight then f2 ((((abs outOfBounds) - num) / blockWidth) * blockWidth) else identity
-    outOfBounds = foldl (\a b -> f1 a b.y) num [a, b, c, d]
+cobX :: (Number -> Number) -> Coordinate -> Coordinate
+cobX f coord = {x: f coord.x, y: coord.y}
 
-moveOutOfBoundsXRight  = moveOutOfBoundsX (canvasWidth  - blockWidth)  max (flip (-))
-moveOutOfBoundsXBottom = moveOutOfBoundsY (canvasHeight - blockHeight) max (flip (-))
-moveOutOfBoundsXLeft   = moveOutOfBoundsX 0.0                          min (+)
-moveOutOfBoundsXTop    = moveOutOfBoundsY 0.0                          min (+)
+cobY :: (Number -> Number) -> Coordinate -> Coordinate
+cobY f coord = {x: coord.x, y: f coord.y}
 
-checkSides = moveOutOfBoundsXTop <<< moveOutOfBoundsXBottom <<< moveOutOfBoundsXLeft <<< moveOutOfBoundsXRight
+moveOutOfBoundsRight  = checkOutOfBounds (canvasWidth  - blockWidth)  cobX (flip (-)) (\a b -> max a b.x)
+moveOutOfBoundsBottom = checkOutOfBounds (canvasHeight - blockHeight) cobY (flip (-)) (\a b -> max a b.y)
+moveOutOfBoundsLeft   = checkOutOfBounds 0.0                          cobX (+)        (\a b -> min a b.x)
+moveOutOfBoundsTop    = checkOutOfBounds 0.0                          cobY (+)        (\a b -> min a b.y)
+
+checkSides = moveOutOfBoundsTop <<< moveOutOfBoundsBottom <<< moveOutOfBoundsLeft <<< moveOutOfBoundsRight
