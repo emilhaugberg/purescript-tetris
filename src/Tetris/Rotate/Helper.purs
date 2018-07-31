@@ -3,14 +3,14 @@ module Tetris.Rotate.Helper where
 import Config
 import Prelude
 
+import Data.Enum
+import Data.Maybe
+
 import Tetris.Shape
 import Tetris.Types
 
 nextRotation' :: Rotation -> Rotation
-nextRotation' One   = Two
-nextRotation' Two   = Three
-nextRotation' Three = Four
-nextRotation' Four  = One
+nextRotation' = fromMaybe One <<< succ
 
 rotationPointsFromShape :: Shape -> ShapesRotationPoints -> RotationPoints
 rotationPointsFromShape L         srp = srp.l

@@ -52,7 +52,6 @@ checkCollision sh ref = void $ modify coll ref
     coll state = if Tetris.checkIfCollided state.current state.previous then next state else state
     next st    = {current: {shape: sh, pos: Tetris.initialPos sh, rotation: Tetris.Two}, previous: snoc st.previous st.current}
 
-
 eventL :: Ref Tetris.State -> Effect EventListener
 eventL ref = eventListener (keyPress ref)
 

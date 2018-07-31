@@ -1,17 +1,34 @@
 module Tetris.Types where
 
 import Prelude
+import Data.Enum
 import Data.Ord
+import Data.Maybe
 
 data Rotation       = One | Two | Three | Four
-data Shape          = Z | T | L | S | MirroredL | Line | Square
-data Action         = Move Direction | Rotate
-data Direction      = Left | Right | Down
-data LineDirection  = Horizontal | Vertical
-data Block a        = Block a a a a
-
 derive instance eqRotation   :: Eq Rotation
+derive instance ordRotation  :: Ord Rotation
+
+instance enumRotation :: Enum Rotation where
+  succ One   = Just Two
+  succ Two   = Just Three
+  succ Three = Just Four
+  succ Four  = Just One
+  pred One   = Just Four
+  pred Two   = Just One
+  pred Three = Just Two
+  pred Four  = Just Three
+
+data Block a        = Block a a a a
 derive instance functorBlock :: Functor Block
+
+data Shape          = Z | T | L | S | MirroredL | Line | Square
+
+data Action         = Move Direction | Rotate
+
+data Direction      = Left | Right | Down
+
+data LineDirection  = Horizontal | Vertical
 
 
 type RotationPoint        = Int
