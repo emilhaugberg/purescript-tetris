@@ -13,8 +13,8 @@ instance enumRotation :: Enum Rotation where
   succ One   = Just Two
   succ Two   = Just Three
   succ Three = Just Four
-  succ Four  = Just One
-  pred One   = Just Four
+  succ Four  = Nothing
+  pred One   = Nothing
   pred Two   = Just One
   pred Three = Just Two
   pred Four  = Just Three
