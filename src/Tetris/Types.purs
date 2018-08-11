@@ -5,6 +5,7 @@ import Data.Enum
 import Data.Ord
 import Data.Maybe
 
+-- ROTATION
 data Rotation       = One | Two | Three | Four
 derive instance eqRotation   :: Eq Rotation
 derive instance ordRotation  :: Ord Rotation
@@ -18,18 +19,6 @@ instance enumRotation :: Enum Rotation where
   pred Two   = Just One
   pred Three = Just Two
   pred Four  = Just Three
-
-data Block a        = Block a a a a
-derive instance functorBlock :: Functor Block
-
-data Shape          = Z | T | L | S | MirroredL | Line | Square
-
-data Action         = Move Direction | Rotate
-
-data Direction      = Left | Right | Down
-
-data LineDirection  = Horizontal | Vertical
-
 
 type RotationPoint        = Int
 type RotationPoints       =
@@ -56,13 +45,28 @@ type Transformation       =
   , four  :: Block Number
   }
 
-type KeyCode              = Int
+-- SHAPES
+data Block a        = Block a a a a
+derive instance functorBlock :: Functor Block
+
+data Shape          = Z | T | L | S | MirroredL | Line | Square
 
 type BlockShape           =
   { shape    :: Shape
   , pos      :: Block Coordinate
   , rotation :: Rotation
   }
+
+-- MOVES/ACTIONS
+data Action         = Move Direction | Rotate | Pause
+
+data Direction      = Left | Right | Down
+
+data LineDirection  = Horizontal | Vertical
+
+
+type KeyCode              = Int
+
 
 type State                 =
   { current :: BlockShape
@@ -72,3 +76,11 @@ type State                 =
 type X                     = Number
 type Y                     = Number
 type Coordinate            = {x :: X, y :: Y}
+
+-- ROWS
+data Color = Cyan | Blue | Orange | Yellow | Green | Purple | Red
+
+data RB = RB Color | Empty
+
+type RowList = Array RB
+newtype Row = Row RowList

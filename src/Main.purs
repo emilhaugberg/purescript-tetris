@@ -1,17 +1,20 @@
 module Main where
 
 import Prelude
-import Config as Config
+import Config
+import Math ((%))
 
 import Data.Array
 import Data.Maybe (Maybe(..))
 import Data.Traversable
 import Data.Unit
+
 import Effect (Effect)
 import Effect.Console (log)
 import Effect.Random
 import Effect.Ref
 import Effect.Timer
+
 import Graphics.Canvas
 
 import Tetris.Shape  as Tetris
@@ -27,6 +30,8 @@ import Web.Event.Internal.Types
 foreign import window  :: EventTarget
 foreign import keyCode :: Event -> Int
 
+step c = {current: {shape: c.current.shape, pos: Tetris.moveBlocks Tetris.Down c.current.pos, rotation: c.current.rotation}, previous: c.previous}
+
 initialState :: Tetris.Shape -> Tetris.State
 initialState s = {current: {shape: s, pos: Tetris.initialPos s, rotation: Tetris.Two}, previous: []}
 
@@ -34,7 +39,7 @@ keydownEvent :: EventType
 keydownEvent = EventType "keydown"
 
 updatePos :: Tetris.Block Tetris.Coordinate -> Tetris.Block Tetris.Coordinate
-updatePos = map \p -> {x: p.x, y: p.y + Config.blockHeight}
+updatePos = map \p -> {x: p.x, y: p.y + blockHeight}
 
 keyPress :: Ref Tetris.State -> Event -> Effect Unit
 keyPress ref e = void $ modify move' ref
@@ -58,27 +63,35 @@ eventL ref = eventListener (keyPress ref)
 randomShape :: Effect Tetris.Shape
 randomShape = Tetris.intToShape <$> randomInt 1 7
 
+stop :: IntervalId -> Effect Unit
+stop = clearInterval
+
 main :: Partial => Effect Unit
 main = void do
   Just canvas <- getCanvasElementById "tetris-canvas"
   ctx         <- getContext2D canvas
   sh          <- randomShape
   state       <- new (initialState sh)
+  timer       <- new 0.0
   evF         <- eventL state
 
   addEventListener keydownEvent evF false window
 
-  _ <- setInterval 50 $ void do
-    clearRect ctx {x: 0.0, y: 0.0, width: Config.canvasWidth, height: Config.canvasHeight}
-    Tetris.drawGrid  Config.numHorizontalBlocks Config.numVerticalBlocks ctx
+  setInterval 50 $ void do
+    clearRect ctx {x: 0.0, y: 0.0, width: canvasWidth, height: canvasHeight}
+    Tetris.drawGrid  numHorizontalBlocks numVerticalBlocks ctx
 
-    sh <- randomShape
-    checkCollision sh state
+    sh' <- randomShape
+
+    checkCollision sh' state
 
     s <- read state
 
     Tetris.drawShapes s.previous ctx
     Tetris.drawShape s.current.pos s.current.shape ctx
 
-  setInterval 1000 $ void do
-    modify (\c -> {current: {shape: c.current.shape, pos: Tetris.moveBlocks Tetris.Down c.current.pos, rotation: c.current.rotation}, previous: c.previous}) state
+    t <- read timer
+
+    _ <- modify (if t % 1000.0 == 0.0 then step else identity) state
+
+    modify ((+) 50.0) timer

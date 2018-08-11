@@ -17,6 +17,7 @@ keyCodeToAction kc = case kc of
   39 -> Just (Move Right)
   40 -> Just (Move Down)
   38 -> Just Rotate
+  32 -> Just Pause
   _  -> Nothing
 
 moveBlocks :: Direction -> Block Coordinate -> Block Coordinate
