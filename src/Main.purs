@@ -66,6 +66,12 @@ randomShape = Tetris.intToShape <$> randomInt 1 7
 stop :: IntervalId -> Effect Unit
 stop = clearInterval
 
+checkTop :: Tetris.State -> IntervalId -> Effect Unit
+checkTop st id = do
+  if atTop && (Tetris.checkIfCollided st.current st.previous) then clearInterval id else pure unit
+  where
+    atTop = foldl (\b a -> a.y <= 0.0 || b) false $ Tetris.blockToArr st.current.pos
+
 main :: Partial => Effect Unit
 main = void do
   Just canvas <- getCanvasElementById "tetris-canvas"
@@ -77,7 +83,7 @@ main = void do
 
   addEventListener keydownEvent evF false window
 
-  setInterval 50 $ void do
+  id <- setInterval 50 $ void do
     clearRect ctx {x: 0.0, y: 0.0, width: canvasWidth, height: canvasHeight}
     Tetris.drawGrid  numHorizontalBlocks numVerticalBlocks ctx
 
@@ -95,3 +101,7 @@ main = void do
     _ <- modify (if t % 1000.0 == 0.0 then step else identity) state
 
     modify ((+) 50.0) timer
+
+  setInterval 50 $ void do
+    st <- read state
+    checkTop st id
