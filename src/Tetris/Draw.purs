@@ -7,11 +7,13 @@ import Effect (Effect, foreachE)
 
 import Tetris.Shape as Tetris
 import Tetris.Types as Tetris
+import Tetris.Row as Tetris
 
 import Data.Array (range)
+import Data.Traversable (traverse)
 import Data.Int
 import Data.Tuple (Tuple(..), fst, snd)
-
+import Data.Maybe
 import Graphics.Canvas
 
 coordinateToRectangle :: Tetris.Coordinate -> Rectangle
@@ -60,7 +62,18 @@ drawShape bc s ctx = drawRects bc
       fillRect ctx r
       stroke   ctx
 
-
 drawShapes :: Array Tetris.BlockShape -> Context2D -> Effect Unit
 drawShapes arr ctx = foreachE arr \i -> do
   drawShape i.pos i.shape ctx
+
+drawShapes' :: Array Tetris.BlockShape -> Context2D -> Effect Unit
+drawShapes' arr ctx = void $ do
+  let rl = fromMaybe [] $ Tetris.toRowList arr
+
+  foreachE rl (\t -> do
+    let r = coordinateToRectangle $ Tetris.rowPosToCoordinate $ fst t
+
+    rect ctx r
+    setFillStyle ctx (show $ snd t)
+    fillRect ctx r
+    stroke ctx)

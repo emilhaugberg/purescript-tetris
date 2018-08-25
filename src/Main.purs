@@ -93,7 +93,7 @@ main = void do
 
     s <- read state
 
-    Tetris.drawShapes s.previous ctx
+    Tetris.drawShapes' s.previous ctx
     Tetris.drawShape s.current.pos s.current.shape ctx
 
     t <- read timer

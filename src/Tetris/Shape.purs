@@ -16,6 +16,16 @@ initialPos = blocksToCoord centerX 0.0 <<< initialPos'
 blockToArr :: forall a. Block a -> Array a
 blockToArr (Block a b c d) = [a, b, c, d]
 
+shapeToColorType :: Shape -> Color
+shapeToColorType = case _ of
+  Z -> Cyan
+  T -> Blue
+  S -> Orange
+  L -> Yellow
+  MirroredL -> Green
+  Line -> Purple
+  Square -> Red
+
 shapeToColor :: Shape -> String
 shapeToColor = case _ of
    Z         -> "#00FFFF"

@@ -78,7 +78,17 @@ type Y                     = Number
 type Coordinate            = {x :: X, y :: Y}
 
 -- ROWS
-data Color = Cyan | Blue | Orange | Yellow | Green | Purple | Red
+data Color = Cyan | Blue | Orange | Yellow | Green | Purple | Red | White
+
+instance showColor :: Show Color where
+  show Cyan   = "#00FFFF"
+  show Blue   = "#0000FF"
+  show Orange = "#FFFF00"
+  show Yellow = "#FFA500"
+  show Green  = "#008000"
+  show Purple = "#800080"
+  show Red    = "#FF0000"
+  show White  = "#FFFFFF"
 
 data RB = RB Color | Empty
 
