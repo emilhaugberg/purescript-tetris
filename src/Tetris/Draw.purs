@@ -11,10 +11,13 @@ import Tetris.Row as Tetris
 
 import Data.Array (range)
 import Data.Traversable (traverse)
+import Data.FunctorWithIndex
 import Data.Int
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Maybe
 import Graphics.Canvas
+
+import Effect.Console (log)
 
 coordinateToRectangle :: Tetris.Coordinate -> Rectangle
 coordinateToRectangle c =
@@ -68,11 +71,12 @@ drawShapes arr ctx = foreachE arr \i -> do
 
 drawShapes' :: Array Tetris.BlockShape -> Context2D -> Effect Unit
 drawShapes' arr ctx = void $ do
-  let rl = fromMaybe [] $ Tetris.toRowList arr
+  let rl = fromMaybe (mapWithIndex (\i _ -> Tuple i Tetris.White) (range 0 200)) $ Tetris.toRowList arr
 
   foreachE rl (\t -> do
+--    _ <- log $ show $ fst t
     let r = coordinateToRectangle $ Tetris.rowPosToCoordinate $ fst t
-
+    _ <- log $ show $ Tetris.rowPosToCoordinate $ fst t
     rect ctx r
     setFillStyle ctx (show $ snd t)
     fillRect ctx r

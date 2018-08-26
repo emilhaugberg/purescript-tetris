@@ -17,7 +17,7 @@ coordinateToRowPos :: Tetris.Coordinate -> Int
 coordinateToRowPos c = ceil $ (c.x % 10.0) * (c.y / 20.0)
 
 rowPosToCoordinate :: Int -> Tetris.Coordinate
-rowPosToCoordinate i = {x: (floor $ toNumber i % 10.0) * blockWidth, y: (toNumber i / 20.0) * blockHeight}
+rowPosToCoordinate i = {x: (floor $ toNumber i % 10.0) * blockWidth, y: (floor (toNumber i / 100.0)) * blockHeight}
 
 initi :: Maybe (Array Tetris.Color)
 initi = pure $ map (const Tetris.White) $ range 0 200
